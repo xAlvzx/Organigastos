@@ -1,19 +1,36 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 
 const Dinero = ({navigation}) => {
   const [dinero, setDinero] = useState(0);
 
-  useEffect(() => {
-    const fetchDinero = async () => {
-      const savedDinero = await AsyncStorage.getItem('money');
-      if (savedDinero !== null) {
-        setDinero(parseFloat(savedDinero));
-      }
-    };
-    fetchDinero();
-  }, []);
+  //use effect para actualizar el dinero global cuando se regresa de la pantalla de consulta de gastos
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchMoney = async () => {
+        const savedMoney = await AsyncStorage.getItem('money');
+        if (savedMoney !== null) {
+          setDinero(parseFloat(savedMoney));
+        }
+      };
+      fetchMoney();
+    }, []),
+  );
+
+  //usefocus effect para actualizar el dinero global cuando se regresa de la pantalla de consulta de gastos
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchMoney = async () => {
+        const savedMoney = await AsyncStorage.getItem('money');
+        if (savedMoney !== null) {
+          setDinero(parseFloat(savedMoney));
+        }
+      };
+      fetchMoney();
+    }, []),
+  );
 
   const handleConsultarGastos = () => {
     navigation.navigate('ConsultaGastos');

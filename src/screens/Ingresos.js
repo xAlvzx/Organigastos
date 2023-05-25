@@ -9,12 +9,39 @@ import {
   Modal,
   SafeAreaView,
 } from 'react-native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 
 const Ingresos = () => {
   const [money, setMoney] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [modalVisibleSubtract, setModalVisibleSubtract] = useState(false);
+
+  //use effect para actualizar el dinero global cuando se regresa de la pantalla de consulta de gastos
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchMoney = async () => {
+        const savedMoney = await AsyncStorage.getItem('money');
+        if (savedMoney !== null) {
+          setMoney(parseFloat(savedMoney));
+        }
+      };
+      fetchMoney();
+    }, []),
+  );
+
+  //usefocus effect para actualizar el dinero global cuando se regresa de la pantalla de consulta de gastos
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchMoney = async () => {
+        const savedMoney = await AsyncStorage.getItem('money');
+        if (savedMoney !== null) {
+          setMoney(parseFloat(savedMoney));
+        }
+      };
+      fetchMoney();
+    }, []),
+  );
 
   const addMoney = () => {
     setModalVisible(true);

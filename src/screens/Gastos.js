@@ -1,25 +1,31 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 
+import {useNavigation} from '@react-navigation/native';
+
 const Gastos = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <View style={styles.itemContainer}>
         <Image
           source={{
-            uri: 'https://static.vecteezy.com/system/resources/previews/008/931/332/non_2x/kids-coloring-pages-cute-cat-character-illustration-eps-and-image-free-vector.jpg',
-          }} // aquí puedes cambiar la URL por la imagen que desees
+            uri: 'https://cdn-icons-png.flaticon.com/512/98/98017.png',
+          }}
           style={styles.itemImage}
         />
-        <TouchableOpacity style={styles.itemButton}>
+        <TouchableOpacity
+          style={styles.itemButton}
+          onPress={() => navigation.navigate('Comida')}>
           <Text style={styles.itemText}>Comidas</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.itemContainer}>
         <Image
           source={{
-            uri: 'https://static.vecteezy.com/system/resources/previews/008/931/332/non_2x/kids-coloring-pages-cute-cat-character-illustration-eps-and-image-free-vector.jpg',
-          }} // aquí puedes cambiar la URL por la imagen que desees
+            uri: 'https://cdn-icons-png.flaticon.com/512/61/61985.png',
+          }}
           style={styles.itemImage}
         />
         <TouchableOpacity style={styles.itemButton}>
@@ -29,8 +35,8 @@ const Gastos = () => {
       <View style={styles.itemContainer}>
         <Image
           source={{
-            uri: 'https://static.vecteezy.com/system/resources/previews/008/931/332/non_2x/kids-coloring-pages-cute-cat-character-illustration-eps-and-image-free-vector.jpg',
-          }} // aquí puedes cambiar la URL por la imagen que desees
+            uri: 'https://cdn-icons-png.flaticon.com/512/2600/2600213.png',
+          }}
           style={styles.itemImage}
         />
         <TouchableOpacity style={styles.itemButton}>
@@ -40,8 +46,8 @@ const Gastos = () => {
       <View style={styles.itemContainer}>
         <Image
           source={{
-            uri: 'https://static.vecteezy.com/system/resources/previews/008/931/332/non_2x/kids-coloring-pages-cute-cat-character-illustration-eps-and-image-free-vector.jpg',
-          }} // aquí puedes cambiar la URL por la imagen que desees
+            uri: 'https://cdn-icons-png.flaticon.com/512/1694/1694113.png',
+          }}
           style={styles.itemImage}
         />
         <TouchableOpacity style={styles.itemButton}>
@@ -51,8 +57,8 @@ const Gastos = () => {
       <View style={styles.itemContainer}>
         <Image
           source={{
-            uri: 'https://static.vecteezy.com/system/resources/previews/008/931/332/non_2x/kids-coloring-pages-cute-cat-character-illustration-eps-and-image-free-vector.jpg',
-          }} // aquí puedes cambiar la URL por la imagen que desees
+            uri: 'https://cdn-icons-png.flaticon.com/512/2273/2273172.png',
+          }}
           style={styles.itemImage}
         />
         <TouchableOpacity style={styles.itemButton}>
@@ -62,8 +68,8 @@ const Gastos = () => {
       <View style={styles.itemContainer}>
         <Image
           source={{
-            uri: 'https://static.vecteezy.com/system/resources/previews/008/931/332/non_2x/kids-coloring-pages-cute-cat-character-illustration-eps-and-image-free-vector.jpg',
-          }} // aquí puedes cambiar la URL por la imagen que desees
+            uri: 'https://cdn-icons-png.flaticon.com/512/938/938339.png',
+          }}
           style={styles.itemImage}
         />
         <TouchableOpacity style={styles.itemButton}>
@@ -88,7 +94,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   itemImage: {
-    width: 100,
+    width: 150,
     height: 100,
     resizeMode: 'contain',
     alignSelf: 'center',

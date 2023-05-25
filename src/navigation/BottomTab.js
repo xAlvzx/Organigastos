@@ -1,19 +1,20 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
 import {Text} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import Ingresos from '../screens/Ingresos';
 import Gastos from '../screens/Gastos';
 import Dinero from '../screens/Dinero';
+import Comida from '../screens/Comida';
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 const BottomTab = () => {
   const tabOptions = ({route}) => ({
     tabBarActiveTintColor: '#4da2ff',
-    // tabBarActiveBackgroundColor: 'grey',
-    // tabBarInactiveBackgroundColor: 'orange',
     tabBarIcon: ({focused, color, size}) => {
       let iconName = '';
       switch (route.name) {
@@ -45,6 +46,7 @@ const BottomTab = () => {
       return <Text style={{textAlign: 'center', color}}>{labelText}</Text>;
     },
   });
+
   const screenOptions = {
     headerTitleAlign: 'center',
     headerStyle: {
@@ -69,4 +71,30 @@ const BottomTab = () => {
   );
 };
 
-export default BottomTab;
+const AppNavigator = () => {
+  const screenOptions = {
+    headerTitleAlign: 'center',
+    headerStyle: {
+      backgroundColor: '#4da2ff',
+    },
+    headerTitleStyle: {
+      fontSize: 28,
+      color: '#FFFFFF',
+    },
+  };
+
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Home"
+        component={BottomTab}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen name="Comida" component={Comida} options={screenOptions} />
+    </Stack.Navigator>
+  );
+};
+
+export default AppNavigator;
