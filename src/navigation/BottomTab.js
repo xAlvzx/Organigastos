@@ -8,6 +8,12 @@ import Ingresos from '../screens/Ingresos';
 import Gastos from '../screens/Gastos';
 import Dinero from '../screens/Dinero';
 import Comida from '../screens/Comida';
+import Transportes from '../screens/Transporte';
+import Despensas from '../screens/Despensas';
+import Higiene from '../screens/HigienePersonal';
+import Otros from '../screens/OtrosGastos';
+import Ahorros from '../screens/Ahorros';
+import ConsultaGastos from '../screens/ConsultaGastos';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -93,6 +99,36 @@ const AppNavigator = () => {
         }}
       />
       <Stack.Screen name="Comida" component={Comida} options={screenOptions} />
+      <Stack.Screen
+        name="Transportes"
+        component={Transportes}
+        options={screenOptions}
+      />
+      <Stack.Screen
+        name="Despensas"
+        component={Despensas}
+        options={screenOptions}
+      />
+      <Stack.Screen
+        name="Higiene Personal"
+        component={Higiene}
+        options={screenOptions}
+      />
+      <Stack.Screen
+        name="Otros Gastos"
+        component={Otros}
+        options={screenOptions}
+      />
+      <Stack.Screen
+        name="Ahorros"
+        component={Ahorros}
+        options={screenOptions}
+      />
+      <Stack.Screen
+        name="Consultar Gastos"
+        component={ConsultaGastos}
+        options={screenOptions}
+      />
     </Stack.Navigator>
   );
 };

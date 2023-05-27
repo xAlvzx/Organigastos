@@ -28,7 +28,9 @@ const Gastos = () => {
           }}
           style={styles.itemImage}
         />
-        <TouchableOpacity style={styles.itemButton}>
+        <TouchableOpacity
+          style={styles.itemButton}
+          onPress={() => navigation.navigate('Transportes')}>
           <Text style={styles.itemText}>Transportes</Text>
         </TouchableOpacity>
       </View>
@@ -39,7 +41,9 @@ const Gastos = () => {
           }}
           style={styles.itemImage}
         />
-        <TouchableOpacity style={styles.itemButton}>
+        <TouchableOpacity
+          style={styles.itemButton}
+          onPress={() => navigation.navigate('Despensas')}>
           <Text style={styles.itemText}>Despensas</Text>
         </TouchableOpacity>
       </View>
@@ -50,7 +54,9 @@ const Gastos = () => {
           }}
           style={styles.itemImage}
         />
-        <TouchableOpacity style={styles.itemButton}>
+        <TouchableOpacity
+          style={styles.itemButton}
+          onPress={() => navigation.navigate('Higiene Personal')}>
           <Text style={styles.itemText}>Higiene personal</Text>
         </TouchableOpacity>
       </View>
@@ -61,7 +67,9 @@ const Gastos = () => {
           }}
           style={styles.itemImage}
         />
-        <TouchableOpacity style={styles.itemButton}>
+        <TouchableOpacity
+          style={styles.itemButton}
+          onPress={() => navigation.navigate('Otros Gastos')}>
           <Text style={styles.itemText}>Otros gastos</Text>
         </TouchableOpacity>
       </View>
@@ -72,7 +80,9 @@ const Gastos = () => {
           }}
           style={styles.itemImage}
         />
-        <TouchableOpacity style={styles.itemButton}>
+        <TouchableOpacity
+          style={styles.itemButton}
+          onPress={() => navigation.navigate('Ahorros')}>
           <Text style={styles.itemText}>Ahorros</Text>
         </TouchableOpacity>
       </View>

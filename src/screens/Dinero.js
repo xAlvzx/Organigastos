@@ -33,7 +33,7 @@ const Dinero = ({navigation}) => {
   );
 
   const handleConsultarGastos = () => {
-    navigation.navigate('ConsultaGastos');
+    navigation.navigate('Consultar Gastos');
   };
 
   return (

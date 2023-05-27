@@ -6,14 +6,17 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  FlatList,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 
 const Comida = () => {
   const [gastoComida, setGastoComida] = useState('');
+  const [descripcion, setDescripcion] = useState('');
   const [totalGastado, setTotalGastado] = useState(0);
   const [dineroGlobal, setDineroGlobal] = useState(0);
+  const [gastosAnteriores, setGastosAnteriores] = useState([]);
 
   useEffect(() => {
     const fetchDineroGlobal = async () => {
@@ -23,6 +26,7 @@ const Comida = () => {
       }
     };
     fetchDineroGlobal();
+    obtenerGastosAnteriores();
   }, []);
 
   // Focus effect para actualizar el dinero global cuando se regresa de la pantalla de consulta de gastos
@@ -46,6 +50,20 @@ const Comida = () => {
     try {
       const gastoFloat = parseFloat(gastoComida);
       if (!isNaN(gastoFloat)) {
+        if (gastoFloat > dineroGlobal) {
+          Alert.alert(
+            'Sin suficiente dinero',
+            'No tienes suficiente dinero para realizar este gasto.',
+          );
+          return; // Detener la ejecución si no hay suficiente dinero
+        }
+
+        const nuevoGasto = {
+          monto: gastoFloat,
+          descripcion: descripcion || `Gasto #${gastosAnteriores.length + 1}`,
+          fecha: new Date().toLocaleString(),
+        };
+
         const gastoActual = await AsyncStorage.getItem('gastoComida');
         const nuevoTotal = parseFloat(gastoActual || '0') + gastoFloat;
         await AsyncStorage.setItem('gastoComida', nuevoTotal.toString());
@@ -56,9 +74,36 @@ const Comida = () => {
 
         setTotalGastado(nuevoTotal);
         setGastoComida('');
+        setDescripcion('');
+
+        guardarGastoAnterior(nuevoGasto);
       }
     } catch (error) {
       console.log('Error al guardar el gasto:', error);
+    }
+  };
+
+  const guardarGastoAnterior = async nuevoGasto => {
+    try {
+      const gastosGuardados = await AsyncStorage.getItem('gastosAnteriores');
+      if (gastosGuardados !== null) {
+        const gastosArray = JSON.parse(gastosGuardados);
+        const nuevosGastos = [...gastosArray, nuevoGasto];
+        await AsyncStorage.setItem(
+          'gastosAnteriores',
+          JSON.stringify(nuevosGastos),
+        );
+        setGastosAnteriores(nuevosGastos);
+      } else {
+        const nuevoArray = [nuevoGasto];
+        await AsyncStorage.setItem(
+          'gastosAnteriores',
+          JSON.stringify(nuevoArray),
+        );
+        setGastosAnteriores(nuevoArray);
+      }
+    } catch (error) {
+      console.log('Error al guardar el gasto anterior:', error);
     }
   };
 
@@ -73,13 +118,29 @@ const Comida = () => {
     }
   };
 
+  const obtenerGastosAnteriores = async () => {
+    try {
+      const gastosGuardados = await AsyncStorage.getItem('gastosAnteriores');
+      if (gastosGuardados !== null) {
+        const gastosArray = JSON.parse(gastosGuardados);
+        setGastosAnteriores(gastosArray);
+      }
+    } catch (error) {
+      console.log('Error al obtener los gastos anteriores:', error);
+    }
+  };
+
   const resetearTotalGastado = () => {
     Alert.alert(
-      'Resetear Total',
+      'Restablecer Total',
       '¿Estás seguro de que quieres resetear el total gastado?',
       [
         {text: 'Cancelar', style: 'cancel'},
-        {text: 'Resetear', style: 'destructive', onPress: handleResetearTotal},
+        {
+          text: 'Resetear',
+          style: 'destructive',
+          onPress: handleResetearTotal,
+        },
       ],
       {cancelable: true},
     );
@@ -88,21 +149,28 @@ const Comida = () => {
   const handleResetearTotal = async () => {
     try {
       await AsyncStorage.removeItem('gastoComida');
+      await AsyncStorage.removeItem('gastosAnteriores');
       setTotalGastado(0);
+      setGastosAnteriores([]);
     } catch (error) {
       console.log('Error al resetear el total gastado:', error);
     }
   };
 
+  const renderGastoAnterior = ({item}) => (
+    <View style={styles.gastoContainer}>
+      <Text style={styles.descripcion}>{item.descripcion}</Text>
+      <Text style={styles.monto}>Monto gastado: ${item.monto.toFixed(2)}</Text>
+      <Text style={styles.fecha}>Fecha: {item.fecha}</Text>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Registro de Gastos en Comida</Text>
-      <Text style={styles.total}>
-        Total gastado: ${totalGastado.toFixed(2)}
-      </Text>
-      <Text style={styles.dineroGlobal}>
-        Dinero restante: ${dineroGlobal.toFixed(2)}
-      </Text>
+      <Text style={styles.title}>Registrar Gasto de Comida</Text>
+      <Text style={styles.subtitulo}>Dinero Disponible</Text>
+      <Text style={styles.moneyText}>${dineroGlobal}</Text>
+
       <TextInput
         style={styles.input}
         keyboardType="numeric"
@@ -111,14 +179,32 @@ const Comida = () => {
         onChangeText={text => setGastoComida(text)}
         placeholderTextColor="#000"
       />
+      <TextInput
+        style={styles.input}
+        placeholder="Ingrese una breve descripción (opcional)"
+        value={descripcion}
+        onChangeText={text => setDescripcion(text)}
+        placeholderTextColor="#000"
+      />
       <TouchableOpacity style={styles.button} onPress={guardarGasto}>
         <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.button, styles.redButton]}
         onPress={resetearTotalGastado}>
-        <Text style={styles.buttonText}>Resetear Total</Text>
+        <Text style={styles.buttonText}>Restablecer Total</Text>
       </TouchableOpacity>
+      <Text style={styles.subtitulo}>Gastos Anteriores</Text>
+      <Text style={styles.total}>
+        Total gastado: ${totalGastado.toFixed(2)}
+      </Text>
+      <FlatList
+        data={gastosAnteriores}
+        renderItem={renderGastoAnterior}
+        keyExtractor={(item, index) => index.toString()}
+        style={styles.listaGastos}
+        contentContainerStyle={styles.listaGastosContent}
+      />
     </View>
   );
 };
@@ -129,22 +215,23 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#fff',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#000000',
+    marginBottom: 10,
+    color: '#000',
   },
   total: {
     fontSize: 18,
     marginBottom: 10,
-    color: '#000000',
+    color: '#000',
   },
   dineroGlobal: {
-    fontSize: 18,
+    fontSize: 24,
     marginBottom: 20,
-    color: '#000000',
+    color: '#000',
   },
   input: {
     width: '100%',
@@ -154,7 +241,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 20,
-    color: '#000000',
+    color: '#000',
   },
   button: {
     backgroundColor: '#4da2ff',
@@ -170,6 +257,56 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  subtitulo: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 5,
+    marginBottom: 5,
+    color: '#000',
+  },
+  listaGastos: {
+    width: '100%',
+  },
+  listaGastosContent: {
+    alignItems: 'flex-start',
+    alignSelf: 'center',
+  },
+  gastoContainer: {
+    backgroundColor: '#f2f2f2',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  },
+  descripcion: {
+    fontSize: 16,
+    color: '#000',
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  monto: {
+    fontSize: 14,
+    color: '#000',
+    marginBottom: 2,
+  },
+  fecha: {
+    fontSize: 14,
+    color: '#888',
+  },
+  moneyContainer: {
+    marginTop: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 100,
+    width: 200,
+    height: 200,
+  },
+  moneyText: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#000000',
+    marginBottom: 20,
   },
 });
 
