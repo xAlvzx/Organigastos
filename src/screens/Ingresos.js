@@ -97,10 +97,6 @@ const Ingresos = () => {
         <Text style={styles.addButtonText}>Añadir dinero</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.subtractButton} onPress={subtractMoney}>
-        <Text style={styles.subtractButtonText}>Quitar dinero</Text>
-      </TouchableOpacity>
-
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <SafeAreaView style={styles.modalContainer}>
           <View style={styles.modalContent}>

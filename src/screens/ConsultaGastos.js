@@ -15,9 +15,9 @@ const ConsultaGastos = () => {
       const gastosComida = await AsyncStorage.getItem('gastoComida');
       const gastosTransporte = await AsyncStorage.getItem('gastoTransporte');
       const gastosDespensas = await AsyncStorage.getItem('gastoDespensas');
-      const gastosHigiene = await AsyncStorage.getItem('gastoHigiene');
+      const gastosHigiene = await AsyncStorage.getItem('gastoHigienePersonal');
       const gastosOtros = await AsyncStorage.getItem('gastoOtros');
-      const gastosAhorros = await AsyncStorage.getItem('gastoAhorros');
+      const gastosAhorros = await AsyncStorage.getItem('gastoAhorro');
 
       const gastosArray = [
         {categoria: 'Comidas', total: gastosComida},
